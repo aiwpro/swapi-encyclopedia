@@ -5,38 +5,39 @@ export const dynamic = "force-dynamic";
 
 const SWAPI_GRAPHQL = "https://swapi-graphql.netlify.app/.netlify/functions/index";
 
+function jsonResponse(body: unknown, status = 200, contentType = "application/json") {
+  return new Response(typeof body === "string" ? body : JSON.stringify(body), {
+    status,
+    headers: { "content-type": contentType },
+  });
+}
+
+async function parseRequestJson(req: NextRequest): Promise<{ json?: unknown; rawBody?: string; error?: Response }> {
+  const debug = req.headers.get("x-debug") === "1";
+  let rawBody = "";
+  try {
+    const json = await req.json();
+    return { json };
+  } catch {
+    rawBody = await req.text();
+    try {
+      const json = JSON.parse(rawBody);
+      return { json, rawBody };
+    } catch {
+      if (debug) return { error: jsonResponse({ error: "Invalid JSON", rawBody }, 400) };
+      return { error: jsonResponse({ errors: [{ message: "Invalid JSON body" }] }, 400) };
+    }
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const debug = req.headers.get("x-debug") === "1";
-    let json: unknown;
-    let rawBody = "";
-    try {
-      json = await req.json();
-    } catch {
-      // Fallback to text to surface what we actually received
-      rawBody = await req.text();
-      try {
-        json = JSON.parse(rawBody);
-      } catch {
-        if (debug) {
-          return new Response(
-            JSON.stringify({ error: "Invalid JSON", rawBody }),
-            { status: 400, headers: { "content-type": "application/json" } }
-          );
-        }
-        return new Response(
-          JSON.stringify({ errors: [{ message: "Invalid JSON body" }] }),
-          { status: 400, headers: { "content-type": "application/json" } }
-        );
-      }
-    }
+    const parsed = await parseRequestJson(req);
+    if (parsed.error) return parsed.error;
+    const { json, rawBody } = parsed;
 
-    if (debug) {
-      return new Response(
-        JSON.stringify({ parsed: json, rawBody: rawBody || undefined }),
-        { status: 200, headers: { "content-type": "application/json" } }
-      );
-    }
+    if (debug) return jsonResponse({ parsed: json, rawBody: rawBody || undefined });
 
     const body = JSON.stringify(json);
     const res = await fetch(SWAPI_GRAPHQL, {
@@ -50,18 +51,10 @@ export async function POST(req: NextRequest) {
     });
 
     const text = await res.text();
-    return new Response(text, {
-      status: res.status,
-      headers: {
-        "content-type": res.headers.get("content-type") || "application/json",
-      },
-    });
+    return jsonResponse(text, res.status, res.headers.get("content-type") || "application/json");
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    return new Response(JSON.stringify({ error: message }), {
-      status: 500,
-      headers: { "content-type": "application/json" },
-    });
+    return jsonResponse({ error: message }, 500);
   }
 }
 
