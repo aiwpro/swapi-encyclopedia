@@ -70,13 +70,13 @@ export default function Home() {
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search characters"
           aria-label="Search characters"
-          className="flex-1 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+          className="flex-1 rounded-md border border-gray-300 text-black bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
         />
         <select
           value={sortAsc ? "asc" : "desc"}
           onChange={(e) => setSortAsc(e.target.value === "asc")}
           aria-label="Sort order"
-          className="rounded-md border border-gray-300 bg-white px-2 py-2 text-sm shadow-sm"
+          className="rounded-md border border-gray-300 text-black bg-white px-2 py-2 text-sm shadow-sm"
         >
           <option value="asc">A→Z</option>
           <option value="desc">Z→A</option>
@@ -164,7 +164,7 @@ export default function Home() {
             })
           }
           disabled={networkStatus === 3}
-          className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-md border border-gray-300 text-black bg-white px-4 py-2 text-sm shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {networkStatus === 3 ? "Loading..." : "Load more"}
         </button>

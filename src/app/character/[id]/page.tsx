@@ -49,7 +49,7 @@ export default function CharacterDetailsPage() {
 
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-6">
-      <Link href="/" className="text-sm text-blue-600 hover:underline">
+      <Link href="/" className="text-sm text-blue-700 hover:underline">
         ← Back to list
       </Link>
 
@@ -68,7 +68,7 @@ export default function CharacterDetailsPage() {
       {!loading && !error && p && (
         <article className="space-y-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
           <header className="space-y-1">
-            <h1 className="text-2xl font-bold tracking-tight">{p.name}</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-700">{p.name}</h1>
             <div className="flex flex-wrap gap-1">
               {p.birthYear && (
                 <span className="rounded-full bg-gray-50 px-2 py-0.5 text-[11px] font-medium text-gray-700 ring-1 ring-gray-200">
@@ -90,33 +90,33 @@ export default function CharacterDetailsPage() {
 
           <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="rounded-md bg-gray-50 p-3">
-              <p className="font-medium">Species</p>
-              <p className="text-sm">{p.species?.name ?? "Human"}</p>
+              <p className="font-medium text-gray-700">Species</p>
+              <p className="text-sm text-gray-700">{p.species?.name ?? "Human"}</p>
               {p.species?.classification && (
-                <p className="text-xs text-gray-600">{p.species.classification}</p>
+                <p className="text-xs text-gray-700">{p.species.classification}</p>
               )}
             </div>
             <div className="rounded-md bg-gray-50 p-3">
-              <p className="font-medium">Homeworld</p>
-              <p className="text-sm">{p.homeworld?.name ?? "Unknown"}</p>
-              <p className="text-xs text-gray-600">
+              <p className="font-medium text-gray-700">Homeworld</p>
+              <p className="text-sm text-gray-700">{p.homeworld?.name ?? "Unknown"}</p>
+              <p className="text-xs text-gray-700">
                 {(p.homeworld?.climates?.filter(Boolean).join(", ") || "Unknown climates")}
                 {p.homeworld?.terrains?.filter(Boolean).length ? ` • ${p.homeworld.terrains.filter(Boolean).join(", ")}` : ""}
               </p>
             </div>
             <div className="rounded-md bg-gray-50 p-3 sm:col-span-2">
-              <p className="font-medium">Physical</p>
-              <p className="text-xs text-gray-700">Height: {p.height ?? "?"} • Mass: {p.mass ?? "?"}</p>
-              <p className="text-xs text-gray-700">Eye: {p.eyeColor ?? "?"} • Hair: {p.hairColor ?? "?"}</p>
+              <p className="font-medium text-gray-700">Physical</p>
+              <p className="text-xs text-gray-800">Height: {p.height ?? "?"} • Mass: {p.mass ?? "?"}</p>
+              <p className="text-xs text-gray-800">Eye: {p.eyeColor ?? "?"} • Hair: {p.hairColor ?? "?"}</p>
             </div>
           </section>
 
           <section>
-            <h2 className="mb-2 text-base font-semibold">Films</h2>
+            <h2 className="mb-2 text-base font-semibold text-gray-700">Films</h2>
             <ul className="space-y-1">
               {p.filmConnection.edges.map((e: { node: FilmNode }) => (
                 <li key={e.node.id} className="text-sm">
-                  • {e.node.title} <span className="text-xs text-gray-500">({e.node.releaseDate})</span>
+                  • {e.node.title} <span className="text-xs text-gray-700">({e.node.releaseDate})</span>
                 </li>
               ))}
             </ul>
